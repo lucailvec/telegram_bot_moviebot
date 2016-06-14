@@ -1,0 +1,12 @@
+language: java
+jdk: oraclejdk8
+before_install:
+  - curl -sLO https://raw.githubusercontent.com/rix0rrr/cover2cover/master/cover2cover.py
+env:
+- secure: jP9lvEfb+xwQ0JbqiNRIGcNUeq8tFt509TEts0f2Hs+qUHsNfgZm6hBlBs47QbsehCipo8+Mq7LmMU3TF6Vas/nE78IAq6GCU45xlqd+TqIt66L1tYULWUyrBlKX5Ju++xGMtiHhjoNhpEMoUtIiWewT0jQE64w12FoClMX4HNBiW1uT6VA0AeMU/GU6piC93c2NNXhQkbuQQz4LqqAWOAjUOHSXsHhLtnB0HvraXQElJ3JDI9gfTJ4hXRlYlyFP30/vLfJl0boFvv8LfTHyVdgwzhk3HhP298DgRbHAgRgKp8pC3vTWMtUpE/chMurVzVcoHrTS1WTONts1PtQGvg==
+before_script:
+  - mkdir -p shippable/codecoverage
+script: ./gradlew check jacocoTestReport
+after_script:
+  - cp -rv build/test-results shippable/testresults
+  - if [ -r build/reports/jacoco/test/jacocoTestReport.xml ]; then python cover2cover.py build/reports/jacoco/test/jacocoTestReport.xml src/main/java > shippable/codecoverage/coverage.xml; fi
